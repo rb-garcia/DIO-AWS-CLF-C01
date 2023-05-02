@@ -1,0 +1,90 @@
+Tabelas e partições
+
+No Amazon DynamoDB, os dados são armazenados em tabelas. Uma tabela contém itens com atributos. Você pode pensar nos itens como linhas ou tuplas em um banco de dados relacional e nos atributos como colunas.
+
+Detalhes do item
+
+Abaixo temos exemplos de itens usando um modelo de chave-valor e um modelo de documento JSON. Somente os atributos marcados em verde para cada modelo são obrigatórios. Eles fazem parte da chave primária. Os atributos da chave primária devem ser do tipo string, número ou binário. O restante é opcional e varia de item para item.
+
+MODELO DE CHAVE-VALOR
+MODELO DE DOCUMENTO JSON
+O DynamoDB oferece suporte aos seguintes tipos de dados para atributos: número, string, binário (codificado em base 64), booleano e nulo. Você também pode usar conjuntos de números, strings e binários (entradas em um conjunto devem ser do mesmo tipo e únicas). Os conjuntos não mantêm a ordem.
+
+sN0JAbyQ_-31zgkb-DynamoDB_KeyValueModel.png
+Para obter informações sobre o modelo de dados do DynamoDB, consulte:
+https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/HowItWorks.Partitions.html
+
+Para obter informações sobre como trabalhar com tabelas, consulte:
+http://docs.aws.amazon.com/amazondynamodb/latest/developerguide/WorkingWithTables.html
+
+Dois tipos de chaves primárias
+
+Uma tabela tem uma chave primária que identifica exclusivamente cada item na tabela. Há dois tipos de chaves primárias:
+
+O item é identificado exclusivamente pela chave de partição. 
+O item é identificado exclusivamente pela chave de partição.
+
+Chave primária de partição
+A chave primária consiste em um único atributo, a chave de partição.  Neste exemplo, a chave primária é o atributo SensorId. Cada sensor tem exatamente uma localização expressa em termos de latitude e longitude.
+
+O DynamoDB cria um índice não ordenado neste atributo de chave primária. 
+
+O item é identificado exclusivamente pela combinação da chave de partição e da chave de classificação. 
+O item é identificado exclusivamente pela combinação da chave de partição e da chave de classificação.
+
+Chave primária de partição e classificação
+A chave primária é composta pela chave de partição e pela chave de classificação. Neste exemplo, a chave primária é composta pelos atributos SensorID e Time. Para cada SensorId, pode haver vários itens correspondentes às leituras do sensor em momentos diferentes. 
+
+O DynamoDB cria um índice não ordenado no atributo de chave de partição e um índice classificado no atributo de chave de classificação.
+
+Consistência
+
+Consistência é a capacidade de ler dados com o entendimento de que todas as gravações anteriores serão refletidas nos resultados retornados. As leituras podem ser “fortemente” consistentes ou “eventualmente” consistentes.  Vejamos um exemplo da diferença com o diagrama abaixo:
+
+É tentador usar sempre operações fortemente consistentes, mas como observado no vídeo, existem fatores adicionais a serem considerados. Como prática recomendada, tente trabalhar com leituras eventualmente consistentes sempre que possível. Vamos ver algumas estratégias para isso mais tarde no curso.
+
+Unidades de capacidade de leitura e gravação
+
+Você deve especificar valores de taxa de transferência de leitura e gravação ao criar uma tabela. O DynamoDB reserva os recursos necessários para lidar com requisitos de taxa de transferência e divide-a uniformemente entre as partições.
+
+RCUWCUimage.png
+A taxa de transferência de unidades de capacidade de leitura e gravação 
+é especificada em termos de:
+
+unidades de capacidade de leitura (RCU) - número de leituras fortemente consistentes por segundo de itens de até 4 KB
+unidades de capacidade de gravação (WCU)- número de gravações de 1 KB por segundo
+
+
+Para obter informações sobre como calcular valores de taxa de transferência provisionados com base no tamanho do item e nas leituras e gravações necessárias por segundo, consulte:
+http://docs.aws.amazon.com/amazondynamodb/latest/developerguide/WorkingWithTables.html
+
+Solicitações básicas de itens
+
+GRAVAÇÃO
+LEITURA
+PutItem – Grava o item na chave primária especificada.
+UpdateItem – Altera atributos de um item com uma chave primária especificada.
+BatchWriteItem – Grava vários itens nas chaves primárias especificadas.
+DeleteItem – Remove o item associado à chave primária especificada.
+Índices secundários
+
+Para executar consultas em atributos que não fazem parte da chave primária da tabela, crie um índice secundário. Existem dois tipos: local eglobal. Você pode definir até cinco índices secundários globais e cinco índices secundários locais por tabela.
+
+ÍNDICE SECUNDÁRIO LOCAL
+ÍNDICE SECUNDÁRIO GLOBAL
+O índice é local para uma chave de partição
+Permite consultar itens com a mesma chave de partição, especificada na consulta. Todos os itens com uma chave de partição específica na tabela e os itens no índice secundário local correspondente (juntamente conhecidos como uma coleção de itens) estão armazenados na mesma partição. O tamanho total de uma coleção de itens não pode exceder 10 GB.
+A chave de partição é igual à da tabela. A chave de classificação pode ser qualquer atributo escalar.
+Só pode ser gerada quando uma tabela é criada e não pode ser excluída.
+Suporta consistência eventual e consistência forte.
+Não tem sua própria taxa de transferência provisionada.
+As consultas podem retornar atributos que não são projetados no índice.
+zLoEIQfogf3Eq0eM-LSIImage.png
+Streams do DynamoDB
+
+Um stream do DynamoDB é um fluxo ordenado de informações sobre alterações em uma tabela. Os registros no stream (fluxo) são estritamente na ordem em que as alterações ocorreram. Cada alteração contém exatamente um registro de stream. Um registro de stream fica disponível por 24 horas.
+
+Exemplo: uma aplicação faz alterações nas preferências do usuário armazenadas em uma tabela do DynamoDB. Outra aplicação, como um servidor de anúncios, responde às alterações nas preferências do usuário e apresenta anúncios diferentes. A aplicação do servidor de anúncios pode ler informações sobre alterações do stream do DynamoDB e apresentar anúncios correspondentes às novas preferências.
+Exemplo: uma aplicação faz alterações nas preferências do usuário armazenadas em uma tabela do DynamoDB. Outra aplicação, como um servidor de anúncios, responde às alterações nas preferências do usuário e apresenta anúncios diferentes. A aplicação do servidor de anúncios pode ler informações sobre alterações do stream do DynamoDB e apresentar anúncios correspondentes às novas preferências.
+
+Para obter informações sobre streams do DynamoDB, consulte: http://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Streams.html

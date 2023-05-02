@@ -1,0 +1,61 @@
+Introdução ao Amazon DynamoDB para arquiteturas serverless
+
+Visão geral do curso
+
+Neste curso, abordaremos:
+
+História dos bancos de dados, características NoSQL e quando o DynamoDB é uma boa escolha.
+Funcionamento do DynamoDB.
+Operação do DynamoDB.
+Considerações de design.
+Alguns padrões comuns serverless com DynamoDB.
+E, finalmente, teremos uma avaliação da sua compreensão sobre o conteúdo do curso.
+Introdução
+
+Vamos começar com uma breve introdução ao DynamoDB.
+
+O que é o Amazon DynamoDB?
+
+O DynamoDB é um banco de dados NoSQL (ou não relacional). Os bancos de dados relacionais foram concebidos para fornecer respostas sobre dados quando a infraestrutura de armazenamento era extremamente cara. Seu design minimiza o volume de dados armazenados. 
+
+Quando alguém faz uma pergunta sobre dados, esses bancos usam o poder de computação para obter as informações solicitadas e construir os relacionamentos necessários para chegar à resposta. 
+
+Para facilitar esta tarefa, os dados devem aderir estritamente a uma estrutura específica. Quase qualquer pergunta pode ser respondida, mas algumas perguntas precisam de muita CPU, levando muito mais tempo do que outras para uma resposta. 
+
+SQL, que significa Structured Query Language (Linguagem de consulta estruturada), permite construir perguntas muito complexas de forma ordenada. Os volumes de dados são cada vez maiores, e as tecnologias de armazenamento evoluíram em resposta. 
+
+Comparado com a CPU, o armazenamento é muito mais barato agora do que era há algumas décadas. Os bancos de dados não relacionais evoluíram para aproveitar essa mudança. 
+
+Para um conjunto definido de perguntas, eles criam as respostas em todo o conjunto de dados e armazenam tudo para uma recuperação oportuna. Isso exige espaço de armazenamento e operações de entrada/saída, mas não depende muito da CPU, e há mais flexibilidade em torno da estrutura dos dados.
+
+As aplicações geralmente recuperam os resultados diretamente por meio de uma API simples, em vez de usar SQL para descrever a pergunta. A pergunta já estará respondida, você só precisa ir buscá-la.
+
+Totalmente gerenciado
+
+A Amazon Web Services criou o DynamoDB para fornecer um serviço de banco de dados não relacional com todas as vantagens da nuvem. O serviço é totalmente gerenciado. Você obtém disponibilidade, durabilidade e escalabilidade integradas e não precisa gerenciar nenhum servidor. 
+
+O DynamoDB é gerenciado pelo Console de Gerenciamento da AWS, por ferramentas de linha de comando ou pelo código da aplicação através do kit de desenvolvimento de software. 
+
+O serviço fornece controles de segurança e métricas para monitoramento, com fácil integração aos demais serviços da AWS. O DynamoDB está disponível em regiões da AWS ao redor do mundo e permite colocar seus dados e serviços próximos aos usuários.
+
+Projetado para OLTP
+
+Que tipos de cargas de trabalho e conjuntos de dados são adequados para o DynamoDB? No contexto relacional, as cargas de trabalho são frequentemente separadas em duas categorias: processamento transacional online (OLTP) e processamento analítico online (OLAP). 
+
+O DynamoDB atende a cargas de trabalho OLTP. É ideal para operações em tempo real: aplicações interativas, dados “quentes” ou ativos, objetos menores, situações em que você deseja armazenar os dados imediatamente e sabe as perguntas que precisa responder rapidamente para atender às suas necessidades.
+
+O DynamoDB gera resultados com baixa latência muito consistente. Se você precisar responder a perguntas analíticas mais complexas não necessariamente previsíveis (e não precisar fazer isso imediatamente), use o DynamoDB com outro serviço adequado para cargas OLAP. 
+
+A flexibilidade de trabalhar com seus dados em vários serviços da AWS significa que você obtém o melhor de dois mundos.
+
+Projetado para bancos de dados de operação
+
+Por falar em opções de banco de dados, aqui temos um diagrama que descreve melhor onde o DynamoDB se encaixa. O Amazon RDS permite usar vários mecanismos de banco de dados relacionais na Nuvem AWS (consultados usando SQL). Muitos dos encargos administrativos são automatizados e gerenciados para você (especialmente com o Amazon Aurora).
+
+Você pode até oferecer suporte a algumas funcionalidades OLAP limitadas juntamente com cargas de trabalho OLTP no RDS, mas isso pode criar problemas de gerenciamento. O DynamoDB é o equivalente NoSQL serverless para cargas do tipo OLTP.
+
+Para necessidades analíticas complexas, você pode usar SQL para fazer perguntas ad hoc sobre seus dados no Amazon Redshift. Para casos de uso de gráficos, em que você precisa percorrer com eficiência relações de várias camadas, o Amazon Neptune seria um serviço NoSQL adequado. 
+
+E, finalmente, temos o Amazon ElastiCache, um armazenamento de dados NoSQL na memória. O Amazon S3 pode ser usado como uma espécie de banco de dados serverless – dada uma chave, você pode armazenar e recuperar dados associados (incluindo objetos grandes) – e o Athena permite fazer consultas SQL serverless em dados estruturados no bucket do S3.
+
+Isso conclui nosso primeiro módulo. Em seguida, falaremos sobre como o DynamoDB funciona.
